@@ -9,6 +9,24 @@ const settings = (): DataSourceOptions => {
       "./migrations/**.{ts,js}"
    );
 
+   // src/data-source.ts
+   // variáveis entitiesPath e migrationsPath
+   const nodeEnv: string | undefined = process.env.NODE_ENV;
+
+   if (nodeEnv === "production") {
+      const databaseUrl = process.env.DATABASE_URL;
+      if (!databaseUrl) {
+         throw new Error("DATABASE_URL environment variable is not defined.");
+      }
+      return {
+         type: "postgres",
+         url: databaseUrl,
+         entities: [entitiesPath],
+         migrations: [migrationPath],
+      };
+   }
+   // retorno da função
+
    const dbUrl: string | undefined = process.env.DATABASE_URL;
 
    if (!dbUrl) throw new Error("Missing env var: 'DATABASE_URL'");
